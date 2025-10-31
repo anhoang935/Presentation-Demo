@@ -77,6 +77,10 @@ func main() {
 		w.Write([]byte(`{"status":"ok"}`))
 	}).Methods("GET")
 
+	// Serve static files from web directory
+	fs := http.FileServer(http.Dir("./web"))
+	router.PathPrefix("/").Handler(fs)
+
 	// Get port from environment or use default
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -86,6 +90,7 @@ func main() {
 	// Start server
 	log.Printf("🚀 Server starting on port %s", port)
 	log.Printf("📝 API documentation available at http://localhost:%s/api", port)
+	log.Printf("🌐 Web interface available at http://localhost:%s", port)
 
 	// Create HTTP server
 	srv := &http.Server{

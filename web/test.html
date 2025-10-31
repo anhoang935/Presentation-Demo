@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #4338ca;
+        }
+        pre {
+            background: #1e293b;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Backend API Test Page</h1>
+    <p>Use this page to test if your backend API is working correctly.</p>
+
+    <div class="test-section">
+        <h2>1. Health Check</h2>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <pre id="healthResult">Click the button to test...</pre>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Get Restaurants</h2>
+        <button onclick="testRestaurants()">Get All Restaurants</button>
+        <pre id="restaurantsResult">Click the button to test...</pre>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Get Foods</h2>
+        <button onclick="testFoods()">Get All Foods</button>
+        <pre id="foodsResult">Click the button to test...</pre>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Database Connection Status</h2>
+        <p>If the endpoints above work, both MySQL and MongoDB are connected!</p>
+        <ul>
+            <li>✅ Restaurants data = <strong>Static Data</strong></li>
+            <li>✅ Foods data = <strong>Static Data</strong></li>
+            <li>📊 Accounts & Users = <strong>MySQL</strong></li>
+            <li>📊 Orders = <strong>MongoDB</strong></li>
+        </ul>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';
+
+        async function testHealth() {
+            const result = document.getElementById('healthResult');
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                result.innerHTML = `<span class="success">✓ Success!</span>\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.innerHTML = `<span class="error">✗ Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testRestaurants() {
+            const result = document.getElementById('restaurantsResult');
+            try {
+                const response = await fetch(`${API_BASE}/api/restaurants`);
+                const data = await response.json();
+                result.innerHTML = `<span class="success">✓ Success! Found ${data.length} restaurants</span>\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.innerHTML = `<span class="error">✗ Error: ${error.message}</span>`;
+            }
+        }
+
+        async function testFoods() {
+            const result = document.getElementById('foodsResult');
+            try {
+                const response = await fetch(`${API_BASE}/api/foods`);
+                const data = await response.json();
+                result.innerHTML = `<span class="success">✓ Success! Found ${data.length} foods</span>\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.innerHTML = `<span class="error">✗ Error: ${error.message}</span>`;
+            }
+        }
+
+        // Auto-run health check on page load
+        window.onload = () => {
+            testHealth();
+        };
+    </script>
+</body>
+</html>

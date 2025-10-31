@@ -1,12 +1,22 @@
 # Presentation Demo - SQL & NoSQL Integration
 
-A demo application showcasing the integration of MySQL (SQL) and MongoDB (NoSQL) databases using Go.
+A demo application showcasing the integration of MySQL (SQL) and MongoDB (NoSQL) databases using Go, with a modern web frontend.
+
+## 🎯 Quick Links
+
+- 🚀 **[Database Setup Summary](./DATABASE_SETUP_SUMMARY.md)** - Start here for database setup!
+- 📗 **[MySQL Setup Guide](./MYSQL_SETUP.md)** - MySQL Workbench instructions
+- 📙 **[MongoDB Setup Guide](./MONGODB_SETUP.md)** - MongoDB Compass instructions
+- 🎨 **[Visual Guide](./VISUAL_GUIDE.md)** - Diagrams and flowcharts
+- 🌐 **[Web Frontend Guide](./web/README.md)** - Frontend documentation
+- ⚡ **[Quick Start](./web/QUICKSTART.md)** - 5-minute setup guide
 
 ## Architecture
 
-- **MySQL**: Stores `Account` and `User` data
-- **MongoDB**: Stores `Order` data
+- **MySQL**: Stores `Account` and `User` data (relational, ACID-compliant)
+- **MongoDB**: Stores `Order` data (document-based, scalable)
 - **Constants**: Restaurant and Food data are hardcoded (not in database)
+- **Web Frontend**: HTML/CSS/JavaScript interface for user interaction
 
 ## Database Schema
 
@@ -36,40 +46,151 @@ A demo application showcasing the integration of MySQL (SQL) and MongoDB (NoSQL)
 ## Prerequisites
 
 - Go 1.21 or higher
-- MySQL 8.0 or higher
-- MongoDB 6.0 or higher
+- MySQL 8.0 or higher (with MySQL Workbench recommended)
+- MongoDB 6.0 or higher (with MongoDB Compass recommended)
 
-## Setup
+## 🚀 Quick Setup
 
-1. **Clone the repository**
+### Prerequisites Installation
 
-2. **Install dependencies**
-```bash
-go mod download
+1. **Install MySQL** (if not already installed)
+   - Download from: https://dev.mysql.com/downloads/
+   - Or use package manager:
+     ```powershell
+     # Windows with Chocolatey
+     choco install mysql
+     
+     # macOS with Homebrew
+     brew install mysql
+     ```
+
+2. **Install MongoDB** (if not already installed)
+   - Download from: https://www.mongodb.com/try/download/community
+   - Or use package manager:
+     ```powershell
+     # Windows with Chocolatey
+     choco install mongodb
+     
+     # macOS with Homebrew
+     brew install mongodb-community
+     ```
+
+3. **Start Database Services**
+   ```powershell
+   # Windows
+   net start MySQL80
+   net start MongoDB
+   
+   # macOS/Linux
+   brew services start mysql
+   brew services start mongodb-community
+   ```
+
+### Automated Database Setup (Recommended)
+
+**Windows:**
+```powershell
+.\setup_databases.bat
 ```
 
-3. **Setup MySQL Database**
+**Linux/macOS:**
 ```bash
-mysql -u root -p < sql/init.sql
+chmod +x setup_databases.sh
+./setup_databases.sh
 ```
 
-4. **Configure environment variables**
-```bash
-cp .env.example .env
-# Edit .env with your database credentials
-```
+This script will:
+- ✅ Initialize MySQL database and tables
+- ✅ Initialize MongoDB database and collections
+- ✅ Create necessary indexes
+- ✅ Verify database connections
 
-5. **Start MongoDB**
-```bash
-mongod
-```
+### Manual Database Setup
 
-6. **Run the application**
-```bash
-go run cmd/server/main.go
-```
+**Detailed guides available:**
+- 📘 [Complete Database Setup Guide](./DATABASE_SETUP.md) - Comprehensive database documentation
 
-The server will start on `http://localhost:8080`
+**Quick version:**
+
+1. **Setup MySQL Database**
+   ```powershell
+   mysql -u root -p < sql\init.sql
+   ```
+
+2. **Setup MongoDB Database**
+   ```powershell
+   mongosh < mongodb\init.js
+   ```
+
+3. **Configure environment variables**
+   
+   Copy `.env.example` to `.env` and update with your settings:
+   ```env
+   # MySQL Configuration
+   MYSQL_HOST=localhost
+   MYSQL_PORT=3306
+   MYSQL_USER=root
+   MYSQL_PASSWORD=your_password
+   MYSQL_DATABASE=demo_db
+
+   # MongoDB Configuration
+   MONGODB_URI=mongodb://localhost:27017
+   MONGODB_DATABASE=demo_db
+
+   # Server Configuration
+   PORT=8080
+   ```
+
+4. **Install Go dependencies**
+   ```powershell
+   go mod tidy
+   ```
+
+5. **Run the application**
+   ```powershell
+   go run cmd/server/main.go
+   ```
+
+   You should see:
+   ```
+   ✅ MySQL connected successfully
+   ✅ MongoDB connected successfully
+   🚀 Server starting on port 8080
+   📝 API documentation available at http://localhost:8080/api
+   🌐 Web interface available at http://localhost:8080
+   ```
+
+6. **Access the Web Interface**
+   
+   Open your browser and navigate to `http://localhost:8080`
+
+### Troubleshooting
+
+If you encounter database connection errors:
+
+1. **MySQL Connection Failed**
+   ```powershell
+   # Test MySQL connection
+   mysql -h localhost -P 3306 -u root -p -e "SELECT VERSION();"
+   
+   # Verify MySQL is running
+   net start | findstr MySQL
+   ```
+
+2. **MongoDB Connection Failed**
+   ```powershell
+   # Test MongoDB connection
+   mongosh --eval "db.version()"
+   
+   # Verify MongoDB is running
+   net start | findstr MongoDB
+   ```
+
+3. **Check DATABASE_SETUP.md** for detailed troubleshooting steps
+
+📚 **More Resources:**
+- [Database Setup Guide](./DATABASE_SETUP.md) - Detailed database configuration
+- [API Examples](./API_EXAMPLES.md) - Test API endpoints
 
 ## API Endpoints
 
@@ -144,6 +265,11 @@ curl -X POST http://localhost:8080/api/orders \
 │       ├── user.go           # User HTTP handlers
 │       ├── order.go          # Order HTTP handlers
 │       └── static.go         # Restaurant & Food handlers
+├── web/
+│   ├── index.html            # Web frontend HTML
+│   ├── styles.css            # Frontend styling
+│   ├── app.js                # Frontend JavaScript
+│   └── README.md             # Frontend documentation
 ├── sql/
 │   └── init.sql              # MySQL schema
 ├── .env.example              # Environment variables template
@@ -154,8 +280,28 @@ curl -X POST http://localhost:8080/api/orders \
 
 ## Technologies Used
 
+### Backend
 - **Go** - Programming language
 - **MySQL** - Relational database
 - **MongoDB** - Document database
 - **Gorilla Mux** - HTTP router
 - **godotenv** - Environment variables
+
+### Frontend
+- **HTML5** - Structure
+- **CSS3** - Styling (Grid, Flexbox, Animations)
+- **JavaScript (ES6+)** - Logic and API communication
+- **Fetch API** - HTTP requests
+
+## Features
+
+- ✅ User registration and login
+- ✅ View restaurants and menus
+- ✅ Place food orders
+- ✅ View order history
+- ✅ Update user profile
+- ✅ Responsive web design
+- ✅ Toast notifications
+- ✅ Session persistence
+- ✅ CORS enabled
+- ✅ Database integration indicators (MySQL/MongoDB badges)
